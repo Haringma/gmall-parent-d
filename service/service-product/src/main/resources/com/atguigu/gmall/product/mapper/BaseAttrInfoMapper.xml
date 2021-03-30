@@ -21,7 +21,7 @@
         </collection>
     </resultMap>
     <!--id:表示方法名-->
-    <select id="selectBaseAttrInfoList" resultMap="baseAttrInfoMap">
+    <select id="getAttrInfoList" resultMap="baseAttrInfoMap">
         SELECT
         bai.id,
         bai.attr_name,
