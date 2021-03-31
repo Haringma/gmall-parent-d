@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper SYSTEM "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!--namespace 定义接口的全路径-->
+<mapper namespace="com.atguigu.gmall.product.mapper.SpuSaleAttrMapper">
+
+    <resultMap id="spuSaleAttrList" type="SpuSaleAttr">
+        <id column="id" property="id"/>
+        <collection property="spuSaleAttrValueList" ofType="SpuSaleAttrValue">
+            <id property="id" column="ssvId"/>
+        </collection>
+    </resultMap>
+
+    <select id="getSpuSaleAttrList" parameterType="java.lang.Long" resultMap="spuSaleAttrList">
+        SELECT
+            ssa.id,
+            ssa.spu_id,
+            ssa.base_sale_attr_id,
+            ssa.sale_attr_name,
+            ssv.id ssvId,
+            ssv.spu_id,
+            ssv.base_sale_attr_id,
+            ssv.sale_attr_value_name,
+            ssv.sale_attr_name
+        FROM
+            `spu_sale_attr` ssa
+            INNER JOIN spu_sale_attr_value ssv ON ssa.spu_id = ssv.spu_id
+            AND ssa.base_sale_attr_id = ssv.base_sale_attr_id
+        WHERE
+            ssa.spu_id = #{spuId}
+    </select>
+
+</mapper>

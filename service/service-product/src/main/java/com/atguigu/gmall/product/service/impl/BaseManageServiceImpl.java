@@ -112,4 +112,76 @@ public class BaseManageServiceImpl implements BaseManageService {
             });
         }
     }
+
+    @Override
+    public List<SpuImage> getSpuImageList(Long spuId) {
+        return spuImageMapper.selectList(new QueryWrapper<SpuImage>().eq("spu_id",spuId));
+    }
+
+    @Override
+    public List<SpuSaleAttr> getSpuSaleAttrList(Long spuId) {
+        return spuSaleAttrMapper.getSpuSaleAttrList(spuId);
+    }
+
+    @Autowired
+    private SkuInfoMapper skuInfoMapper;
+    @Autowired
+    private SkuImageMapper skuImageMapper;
+    @Autowired
+    private SkuAttrValueMapper skuAttrValueMapper;
+    @Autowired
+    private SkuSaleAttrValueMapper skuSaleAttrValueMapper;
+
+    @Override
+    public void saveSkuInfo(SkuInfo skuInfo) {
+        int insert = skuInfoMapper.insert(skuInfo);
+        if (insert != 0){
+            Long skuId = skuInfo.getId();
+            List<SkuImage> skuImageList = skuInfo.getSkuImageList();
+            skuImageList.forEach(skuImage -> {
+                skuImage.setSkuId(skuId);
+                skuImageMapper.insert(skuImage);
+            });
+            List<SkuAttrValue> skuAttrValueList = skuInfo.getSkuAttrValueList();
+            skuAttrValueList.forEach(skuAttrValue -> {
+                skuAttrValue.setSkuId(skuId);
+                skuAttrValueMapper.insert(skuAttrValue);
+            });
+            List<SkuSaleAttrValue> skuSaleAttrValueList = skuInfo.getSkuSaleAttrValueList();
+            skuSaleAttrValueList.forEach(skuSaleAttrValue -> {
+                skuSaleAttrValue.setSkuId(skuId);
+                skuSaleAttrValueMapper.insert(skuSaleAttrValue);
+            });
+        }
+    }
+
+    @Override
+    public IPage<SkuInfo> getSkuInfoList(Long page, Long limit) {
+        IPage<SkuInfo> skuInfoPage = new Page<>(page, limit);
+
+        return skuInfoMapper.selectPage(skuInfoPage, null);
+    }
+
+    @Override
+    public void onSale(Long skuId) {
+        SkuInfo skuInfo = new SkuInfo();
+        skuInfo.setId(skuId);
+        skuInfo.setIsSale(1);
+        skuInfoMapper.updateById(skuInfo);
+    }
+
+    @Override
+    public void cancelSale(Long skuId) {
+        SkuInfo skuInfo = new SkuInfo();
+        skuInfo.setId(skuId);
+        skuInfo.setIsSale(0);
+        skuInfoMapper.updateById(skuInfo);
+    }
+
+    @Override
+    public IPage<BaseTrademark> getBaseTrademark(Long page, Long limit) {
+        IPage<BaseTrademark> baseTrademarkIPage = new Page<>(page, limit);
+
+        return baseTrademarkMapper.selectPage(baseTrademarkIPage, null);
+    }
 }

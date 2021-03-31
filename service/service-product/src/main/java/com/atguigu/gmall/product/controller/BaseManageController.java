@@ -4,6 +4,7 @@ import com.atguigu.gmall.common.result.Result;
 import com.atguigu.gmall.model.product.*;
 import com.atguigu.gmall.product.service.BaseManageService;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.api.R;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.io.FilenameUtils;
@@ -101,4 +102,49 @@ public class BaseManageController {
         String path = storageClient1.upload_file1(file.getBytes(), extension, null);
         return Result.ok(imageUrl + path);
     }
+
+    @ApiOperation("根据spuId获取图片列表")
+    @GetMapping("/spuImageList/{spuId}")
+    public Result<List<SpuImage>> getSpuImageList(@PathVariable Long spuId){
+        List<SpuImage> list = baseManageService.getSpuImageList(spuId);
+        return Result.ok(list);
+    }
+
+    @ApiOperation("根据spuId获取销售属性")
+    @GetMapping("spuSaleAttrList/{spuId}")
+    public Result<List<SpuSaleAttr>> getSpuSaleAttrList(@PathVariable Long spuId){
+        List<SpuSaleAttr> list = baseManageService.getSpuSaleAttrList(spuId);
+        return Result.ok(list);
+    }
+
+    @PostMapping("saveSkuInfo")
+    public Result saveSkuInfo(@RequestBody SkuInfo skuInfo){
+        baseManageService.saveSkuInfo(skuInfo);
+        return Result.ok();
+    }
+
+    @GetMapping("/list/{page}/{limit}")
+    public Result<IPage<SkuInfo>> getSkuInfoList(@PathVariable Long page, @PathVariable Long limit){
+        IPage<SkuInfo> skuInfoIPage = baseManageService.getSkuInfoList(page, limit);
+        return Result.ok(skuInfoIPage);
+    }
+
+    @GetMapping("/onSale/{skuId}")
+    public Result onSale(@PathVariable Long skuId){
+        baseManageService.onSale(skuId);
+        return Result.ok();
+    }
+
+    @GetMapping("/cancelSale/{skuId}")
+    public Result cancelSale(@PathVariable Long skuId){
+        baseManageService.cancelSale(skuId);
+        return Result.ok();
+    }
+
+    @GetMapping("/baseTrademark/{page}/{limit}")
+    public Result<IPage<BaseTrademark>> getBaseTrademark(@PathVariable Long page, @PathVariable Long limit){
+        IPage<BaseTrademark> baseTrademarkIPage = baseManageService.getBaseTrademark(page, limit);
+        return Result.ok(baseTrademarkIPage);
+    }
+
 }

@@ -22,4 +22,18 @@ public interface BaseManageService {
     List<BaseTrademark> getTrademarkList();
 
     void saveSpuInfo(SpuInfo spuInfo);
+
+    List<SpuImage> getSpuImageList(Long spuId);
+
+    List<SpuSaleAttr> getSpuSaleAttrList(Long spuId);
+
+    void saveSkuInfo(SkuInfo skuInfo);
+
+    IPage<SkuInfo> getSkuInfoList(Long page, Long limit);
+
+    void onSale(Long skuId);
+
+    void cancelSale(Long skuId);
+
+    IPage<BaseTrademark> getBaseTrademark(Long page, Long limit);
 }
