@@ -9,7 +9,9 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class BaseManageServiceImpl implements BaseManageService {
@@ -115,7 +117,7 @@ public class BaseManageServiceImpl implements BaseManageService {
 
     @Override
     public List<SpuImage> getSpuImageList(Long spuId) {
-        return spuImageMapper.selectList(new QueryWrapper<SpuImage>().eq("spu_id",spuId));
+        return spuImageMapper.selectList(new QueryWrapper<SpuImage>().eq("spu_id", spuId));
     }
 
     @Override
@@ -135,7 +137,7 @@ public class BaseManageServiceImpl implements BaseManageService {
     @Override
     public void saveSkuInfo(SkuInfo skuInfo) {
         int insert = skuInfoMapper.insert(skuInfo);
-        if (insert != 0){
+        if (insert != 0) {
             Long skuId = skuInfo.getId();
             List<SkuImage> skuImageList = skuInfo.getSkuImageList();
             skuImageList.forEach(skuImage -> {
@@ -183,5 +185,30 @@ public class BaseManageServiceImpl implements BaseManageService {
         IPage<BaseTrademark> baseTrademarkIPage = new Page<>(page, limit);
 
         return baseTrademarkMapper.selectPage(baseTrademarkIPage, null);
+    }
+
+    @Override
+    public SkuInfo getSkuInfo(Long skuId) {
+        return skuInfoMapper.selectOne(new QueryWrapper<SkuInfo>().eq("id", skuId));
+    }
+
+    @Override
+    public Map<String, Object> getCategoryView(Long category3Id) {
+        return baseAttrInfoMapper.getCategoryView(category3Id);
+    }
+
+    @Override
+    public BigDecimal getSkuPrice(Long skuId) {
+        SkuInfo skuInfo = skuInfoMapper.selectOne(new QueryWrapper<SkuInfo>().eq("id", skuId));
+        if (skuInfo != null) {
+            return skuInfo.getPrice();
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public List<SpuSaleAttrValue> getSpuSaleAttrListCheckBySku(Long skuId, Long spuId) {
+        return baseAttrInfoMapper.getSpuSaleAttrListCheckBySku(skuId, spuId);
     }
 }

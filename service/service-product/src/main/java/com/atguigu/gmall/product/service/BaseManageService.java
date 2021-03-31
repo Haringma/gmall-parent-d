@@ -3,7 +3,9 @@ package com.atguigu.gmall.product.service;
 import com.atguigu.gmall.model.product.*;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 public interface BaseManageService {
 
@@ -36,4 +38,12 @@ public interface BaseManageService {
     void cancelSale(Long skuId);
 
     IPage<BaseTrademark> getBaseTrademark(Long page, Long limit);
+
+    SkuInfo getSkuInfo(Long skuId);
+
+    Map<String,Object> getCategoryView(Long category3Id);
+
+    BigDecimal getSkuPrice(Long skuId);
+
+    List<SpuSaleAttrValue> getSpuSaleAttrListCheckBySku(Long skuId, Long spuId);
 }

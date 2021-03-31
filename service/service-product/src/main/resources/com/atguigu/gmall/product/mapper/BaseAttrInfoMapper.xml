@@ -47,4 +47,40 @@
         order by bai.category_level, bai.id
     </select>
 
+    <select id="getCategoryView" parameterType="java.lang.Long" resultType="java.util.Map">
+        SELECT
+            b1.id category1Id,
+            b1.NAME category1Name,
+            b2.id category2Id,
+            b2.NAME category2Name,
+            b3.id category3Id,
+            b3.NAME category3Name
+        FROM
+            base_category1 b1
+            INNER JOIN base_category2 b2 ON b1.id = b2.category1_id
+            INNER JOIN base_category3 b3 ON b2.id = b3.category2_id
+        WHERE
+            b3.id = #{category3Id}
+    </select>
+
+    <select id="getSpuSaleAttrListCheckBySku" parameterType="java.lang.Long" resultType="SpuSaleAttrValue">
+        SELECT
+            spv.id,
+            spv.sale_attr_value_name,
+            spv.sale_attr_name,
+            spv.base_sale_attr_id,
+            skv.sku_id,
+        IF
+            ( skv.sku_id IS NOT NULL, 1, 0 ) is_checked
+        FROM
+            spu_sale_attr_value spv
+            LEFT JOIN sku_sale_attr_value skv ON skv.sale_attr_value_id = spv.id
+            AND skv.sku_id = #{skuId}
+        WHERE
+            spv.spu_id = #{spuId}
+        ORDER BY
+            spv.base_sale_attr_id,
+            spv.id
+    </select>
+
 </mapper>
